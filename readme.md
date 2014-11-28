@@ -33,7 +33,7 @@ wpTrackerCS is a simple program that provides a notification icon to inform the 
 
 wpTrackerCS is too simple to have an installer. Just copy the .exe to wherever you want to use it from. I suggest you create a new folder at `C:\Program Files\Nitemice Software`, and put in there, but it's totally up to you.
 
-If you want wpTrackerCS to run at startup, create a shortcut to it in `C:\users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup` for just your user, or `C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup`for all users.
+If you want wpTrackerCS to run at startup, create a shortcut to it in `C:\users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup` for just your user, or `C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup` for all users.
 
 You may also want to make the icon always visible in the system tray, by following the steps set out [here by How-To Geek](http://www.howtogeek.com/75510/beginner-how-to-customize-and-tweak-your-system-tray-icons-in-windows-7/).
 
