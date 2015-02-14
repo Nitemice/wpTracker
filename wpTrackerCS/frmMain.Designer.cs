@@ -111,7 +111,7 @@
             this.Label3.Size = new System.Drawing.Size(213, 49);
             this.Label3.TabIndex = 20;
             this.Label3.Text = "A little notification icon to tell you which screen\'s wallpaper changed last and " +
-    "when - V3.2";
+    "when - V3.3";
             this.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Label2

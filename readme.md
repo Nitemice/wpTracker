@@ -1,8 +1,8 @@
 ﻿wpTrackerCS
 =====================================
 *A Multiple-Monitor Wallpaper Tracker*  
-**v3.2.0**  
-by Nitemice, 2014  
+**v3.3.0**  
+by Nitemice, 2015  
   
 Contents 
 --------
@@ -59,6 +59,7 @@ To exit the program, right-click on the icon and choose "Exit".
 5. Version History
 ------------------
   
+* 3.3.0 (14/02/2015) : Altered registry path & added some support for 4-16 monitors  
 * 3.2.0 (27/10/2014) : Updated registry-checking mechanism to be more robust  
 * 3.1.0 (5/9/2014) : Rewritten in C#, added interval-saving feature  
 * 1.3 (11/8/2014) : Added time-checking of when last wp change occurred  
@@ -69,7 +70,7 @@ To exit the program, right-click on the icon and choose "Exit".
 ----------------------------
   
 This software is licensed under The MIT License (MIT)
-Copyright (c) 2014 Nitemice
+Copyright (c) 2015 Nitemice
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the	Software without restriction, including without limitation the rights to use,	copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the	Software, and to permit persons to whom the Software is furnished to do so,	subject to the following conditions:
 

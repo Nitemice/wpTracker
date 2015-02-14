@@ -92,17 +92,19 @@ namespace wpTrackerCS
         private void CheckWallpaper()
         {
             // Check the wallpaper value in registry
-            int readValue = 8;
+            int readValue = -1;
 
-            RegistryKey wholeRegistry = Registry.Users;
+            RegistryKey wholeRegistry = Registry.CurrentUser;
 
             foreach (string Keyname in wholeRegistry.GetSubKeyNames())
             {
-                if(Keyname.StartsWith("S-1-5-21-") && !Keyname.EndsWith("Classes"))
+                if(Keyname.StartsWith("Control Panel"))
                 {
                     RegistryKey parentKey = wholeRegistry.OpenSubKey(Keyname);
-                    parentKey = parentKey.OpenSubKey("Control Panel\\Desktop");
-                    readValue = (Int32) parentKey.GetValue("LastUpdated", null);
+                    
+                    // Grab the last updated screen
+                    parentKey = parentKey.OpenSubKey("Desktop");
+                    readValue = (Int32) parentKey.GetValue("LastUpdated");
                 }
             } 
 
@@ -123,13 +125,20 @@ namespace wpTrackerCS
                     nfiMain.Icon = Properties.Resources.Screen2;
                     nfiMain.Text = "Last WP Change: Screen 2 @ " + modifiedTime.ToShortTimeString();
                     break;
-                case 3:
+                case 2:
                     nfiMain.Icon = Properties.Resources.Screen3;
                     nfiMain.Text = "Last WP Change: Screen 3 @ " + modifiedTime.ToShortTimeString();
                     break;
                 default:
                     nfiMain.Icon = Properties.Resources.ScreenOA;
-                    nfiMain.Text = "Last WP Change: Unknown Error @ " + modifiedTime.ToShortTimeString();
+                    // Support a larger number of monitors
+                    if(readValue >0 && readValue < 17)
+                    {
+                        nfiMain.Text = "Last WP Change: " + readValue + " @ " + modifiedTime.ToShortTimeString();
+                    } else
+                    {
+                        nfiMain.Text = "Last WP Change: Unknown Error @ " + modifiedTime.ToShortTimeString();
+                    }
                     break;
             }
         }
