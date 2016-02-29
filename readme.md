@@ -12,15 +12,15 @@ Contents
 3. [Installation](#3-installation)
 4. [Usage](#4-usage)
 5. [Version History](#5-version-history)
-6. [Terms of Use & Disclaimer](#6-terms-of-use-disclaimer)
+6. [Terms of Use & Disclaimer](#6-terms-of-use--disclaimer)
 7. [Contact Information](#7-contact-information)
 
 
 1. System Requirements
 ----------------------
 
-- Windows 8 with native wallpaper slideshow enabled
-- about 1 megabyte of free space on hard disk  
+- Windows 8/10 with native wallpaper slideshow enabled
+- about 1 megabyte of free space on hard disk
 - about 30 megabytes of free memory
 
 2. Overview
