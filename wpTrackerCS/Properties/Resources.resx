@@ -118,16 +118,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Screen1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ScreenOB1A.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ScreenOFF" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\screenoff.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Screen2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ScreenOB2A.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ScreenON" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\screenon.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Screen3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ScreenOB3A.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ScreenON1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\screenon1.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ScreenOA" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ScreenOA.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ScreenON2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\screenon2.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ScreenON3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\screenon3.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
