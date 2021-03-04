@@ -1,14 +1,9 @@
 ﻿/* wpTrackerCS (Wallpaper Tracker in C#)
  * By Nitemice
- * Date: 19-3-2014
- * Updated: 5-9-2014
- * Version: 3.1.0
  * 
  * A little notification icon to tell you which screen's wallpaper
  * changed last and at what time.
  *  
- * Known Errors:
- *  Nil
  * 
  * This software is licensed under The MIT License (MIT)
  * Copyright (c) 2014 Nitemice
@@ -70,6 +65,12 @@ namespace wpTrackerCS
             // Hide the form & update settings
             HideForm();
         }
+                
+        public void ShowForm()
+        {
+            this.Show();
+            this.ShowInTaskbar = true;
+        }
 
         private void HideForm()
         {
@@ -90,11 +91,6 @@ namespace wpTrackerCS
             // Run the checking code now
             CheckWallpaper();
         }
-        public void ShowForm()
-        {
-            this.Show();
-            this.ShowInTaskbar = true;
-        }
 
         private void CheckWallpaper()
         {
@@ -109,21 +105,27 @@ namespace wpTrackerCS
             var modifiedTime = File.GetLastWriteTime(filePath);
 
             // Set the icon and message accordingly
-            nfiMain.Icon = Properties.Resources.ScreenON;
+            nfiMain.Icon = Properties.Resources.ScreenOFF;
+            nfiMain.Text = "Last WP Change: ";
 
             if (updatedScreen >= 0)
             {
-                nfiMain.Text = "Last WP Change: Screen " + (updatedScreen + 1) +
-                               " @ " + modifiedTime.ToShortTimeString();
+                nfiMain.Text += "Screen " + (updatedScreen + 1);
                 if (updatedScreen < s_screenIcons.Length)
                 {
                     nfiMain.Icon = s_screenIcons[updatedScreen];
                 }
+                else
+                {
+                    nfiMain.Icon = Properties.Resources.ScreenON;
+                }
             }
             else
             {
-                nfiMain.Text = "Last WP Change: Unknown Error @ " + modifiedTime.ToShortTimeString();
+                nfiMain.Text += "Unknown";
             }
+
+            nfiMain.Text +=  " @ " + modifiedTime.ToShortTimeString();
         }
 
         }
@@ -151,9 +153,16 @@ namespace wpTrackerCS
             // Force a check now!
             CheckWallpaper();
         }
+
         private void btnCheck_Click(object sender, EventArgs e)
         {
             // Force a check now!
+            CheckWallpaper();
+        }
+
+        private void tmrCheck_Tick(object sender, EventArgs e)
+        {
+            // Run the checking code now
             CheckWallpaper();
         }
 
@@ -170,12 +179,6 @@ namespace wpTrackerCS
         {
             // Open my website in the default browser
             System.Diagnostics.Process.Start("http://nitemice.net");
-        }
-
-        private void tmrCheck_Tick(object sender, EventArgs e)
-        {
-            // Run the checking code now
-            CheckWallpaper();
         }
 
     }

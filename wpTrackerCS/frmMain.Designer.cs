@@ -94,24 +94,24 @@
             this.lblNitemice.AutoSize = true;
             this.lblNitemice.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblNitemice.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNitemice.Location = new System.Drawing.Point(22, 106);
+            this.lblNitemice.Location = new System.Drawing.Point(55, 100);
             this.lblNitemice.Name = "lblNitemice";
-            this.lblNitemice.Size = new System.Drawing.Size(195, 18);
+            this.lblNitemice.Size = new System.Drawing.Size(129, 18);
             this.lblNitemice.TabIndex = 21;
-            this.lblNitemice.Text = "By Nitemice Software - 2014";
+            this.lblNitemice.Text = "Nitemice Software";
             this.lblNitemice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblNitemice.Click += new System.EventHandler(this.lblNitemice_Click);
             // 
             // Label3
             // 
             this.Label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label3.Location = new System.Drawing.Point(13, 51);
+            this.Label3.Location = new System.Drawing.Point(13, 48);
             this.Label3.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.Label3.Name = "Label3";
             this.Label3.Size = new System.Drawing.Size(213, 49);
             this.Label3.TabIndex = 20;
             this.Label3.Text = "A little notification icon to tell you which screen\'s wallpaper changed last and " +
-    "when - V3.3";
+    "when";
             this.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Label2
