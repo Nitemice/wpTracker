@@ -4,7 +4,7 @@
  * Updated: 5-9-2014
  * Version: 3.1.0
  * 
- * A little notification icon to tell you which screen's wallpaper 
+ * A little notification icon to tell you which screen's wallpaper
  * changed last and at what time.
  *  
  * Known Errors:
@@ -14,10 +14,10 @@
  * Copyright (c) 2014 Nitemice
  * 
  * 	Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * 	 and associated documentation files (the "Software"), to deal in the Software without restriction,
- * 	 including without limitation the rights to use, copy, modify, merge, publish, distribute, 
- * 	 sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is 
- * 	 furnished to do so, subject to the following conditions:
+ * 	and associated documentation files (the "Software"), to deal in the Software without restriction,
+ * 	including without limitation the rights to use, copy, modify, merge, publish, distribute, 
+ * 	sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is 
+ * 	furnished to do so, subject to the following conditions:
  * 	 
  * 	The above copyright notice and this permission notice shall be included in all copies
  * 	or substantial portions of the Software.
@@ -41,6 +41,13 @@ namespace wpTrackerCS
 {
     public partial class frmMain : Form
     {
+        static Icon[] s_screenIcons = {Properties.Resources.ScreenON1,
+                                       Properties.Resources.ScreenON2,
+                                       Properties.Resources.ScreenON3,
+                                       Properties.Resources.ScreenON4,
+                                       Properties.Resources.ScreenON5,
+                                       Properties.Resources.ScreenON6};
+
         public frmMain()
         {
             InitializeComponent();
@@ -61,7 +68,7 @@ namespace wpTrackerCS
             e.Cancel = true;
 
             // Hide the form & update settings
-            HideForm();  
+            HideForm();
         }
 
         private void HideForm()
@@ -91,56 +98,34 @@ namespace wpTrackerCS
 
         private void CheckWallpaper()
         {
-            // Check the wallpaper value in registry
-            int readValue = -1;
-
-            RegistryKey wholeRegistry = Registry.CurrentUser;
-
-            foreach (string Keyname in wholeRegistry.GetSubKeyNames())
-            {
-                if(Keyname.StartsWith("Control Panel"))
-                {
-                    RegistryKey parentKey = wholeRegistry.OpenSubKey(Keyname);
-                    
-                    // Grab the last updated screen
-                    parentKey = parentKey.OpenSubKey("Desktop");
-                    readValue = (Int32) parentKey.GetValue("LastUpdated");
-                }
-            } 
-
+            // Check the last updated screen value in registry
+            RegistryKey parentKey = Registry.CurrentUser
+                                            .OpenSubKey("Control Panel")
+                                            .OpenSubKey("Desktop");
+            int updatedScreen = (Int32)parentKey.GetValue("LastUpdated");
 
             // Find out when the last change occurred
-            String filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-            "\\Microsoft\\Windows\\Themes\\TranscodedWallpaper";
+            String filePath = (String)parentKey.GetValue("WallPaper");
             var modifiedTime = File.GetLastWriteTime(filePath);
 
             // Set the icon and message accordingly
-            switch (readValue)
+            nfiMain.Icon = Properties.Resources.ScreenON;
+
+            if (updatedScreen >= 0)
             {
-                case 0:
-                    nfiMain.Icon = Properties.Resources.Screen1;
-                    nfiMain.Text = "Last WP Change: Screen 1 @ " + modifiedTime.ToShortTimeString();
-                    break;
-                case 1:
-                    nfiMain.Icon = Properties.Resources.Screen2;
-                    nfiMain.Text = "Last WP Change: Screen 2 @ " + modifiedTime.ToShortTimeString();
-                    break;
-                case 2:
-                    nfiMain.Icon = Properties.Resources.Screen3;
-                    nfiMain.Text = "Last WP Change: Screen 3 @ " + modifiedTime.ToShortTimeString();
-                    break;
-                default:
-                    nfiMain.Icon = Properties.Resources.ScreenOA;
-                    // Support a larger number of monitors
-                    if(readValue >0 && readValue < 17)
-                    {
-                        nfiMain.Text = "Last WP Change: " + readValue + " @ " + modifiedTime.ToShortTimeString();
-                    } else
-                    {
-                        nfiMain.Text = "Last WP Change: Unknown Error @ " + modifiedTime.ToShortTimeString();
-                    }
-                    break;
+                nfiMain.Text = "Last WP Change: Screen " + (updatedScreen + 1) +
+                               " @ " + modifiedTime.ToShortTimeString();
+                if (updatedScreen < s_screenIcons.Length)
+                {
+                    nfiMain.Icon = s_screenIcons[updatedScreen];
+                }
             }
+            else
+            {
+                nfiMain.Text = "Last WP Change: Unknown Error @ " + modifiedTime.ToShortTimeString();
+            }
+        }
+
         }
 
         private void nfiMain_MouseDoubleClick(object sender, MouseEventArgs e)

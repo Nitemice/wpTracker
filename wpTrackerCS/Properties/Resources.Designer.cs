@@ -109,5 +109,35 @@ namespace wpTrackerCS.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon ScreenON4 {
+            get {
+                object obj = ResourceManager.GetObject("ScreenON4", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon ScreenON5 {
+            get {
+                object obj = ResourceManager.GetObject("ScreenON5", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon ScreenON6 {
+            get {
+                object obj = ResourceManager.GetObject("ScreenON6", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }

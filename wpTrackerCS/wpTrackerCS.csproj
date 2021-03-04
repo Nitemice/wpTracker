@@ -133,6 +133,9 @@
     <Content Include="Resources\ScreenON1.ico" />
     <Content Include="Resources\ScreenON2.ico" />
     <Content Include="Resources\ScreenON3.ico" />
+    <Content Include="Resources\ScreenON4.ico" />
+    <Content Include="Resources\ScreenON5.ico" />
+    <Content Include="Resources\ScreenON6.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
