@@ -1,27 +1,5 @@
 ﻿/* wpTrackerCS (Wallpaper Tracker in C#)
  * By Nitemice
- * 
- * A little notification icon to tell you which screen's wallpaper
- * changed last and at what time.
- *  
- * 
- * This software is licensed under The MIT License (MIT)
- * Copyright (c) 2014 Nitemice
- * 
- * 	Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * 	and associated documentation files (the "Software"), to deal in the Software without restriction,
- * 	including without limitation the rights to use, copy, modify, merge, publish, distribute, 
- * 	sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is 
- * 	furnished to do so, subject to the following conditions:
- * 	 
- * 	The above copyright notice and this permission notice shall be included in all copies
- * 	or substantial portions of the Software.
- * 	
- * 	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * 	INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
- * 	AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
- * 	DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
- * 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 using System;
@@ -31,6 +9,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using RegistryUtils;
 
 namespace wpTrackerCS
 {
@@ -42,17 +21,50 @@ namespace wpTrackerCS
                                        Properties.Resources.ScreenON4,
                                        Properties.Resources.ScreenON5,
                                        Properties.Resources.ScreenON6};
+        RegistryMonitor g_monitor;
 
         public frmMain()
         {
             InitializeComponent();
+
+            // Initialise monitoring registry for changes to wallpaper screen value
+            g_monitor = new RegistryMonitor(RegistryHive.CurrentUser,
+                                            "Control Panel\\Desktop");
+            g_monitor.RegChanged += new EventHandler(CheckWallpaper);
+            g_monitor.Start();
+        }
+
+        private void Shutdown()
+        {
+            // Kill the registry monitor
+            g_monitor.Stop();
+
+            // Quit the program
+            Application.Exit();
+        }
+
+        private void HideForm()
+        {
+            // Make the form invisible
+            this.Hide();
+            this.ShowInTaskbar = false;
+
+            // Run the checking code now
+            CheckWallpaper();
+        }
+
+        public void ShowForm()
+        {
+            // Make the form visible
+            this.Show();
+            this.ShowInTaskbar = true;
+
+            // Run the checking code now
+            CheckWallpaper();
         }
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            // Load any previous user-chosen interval
-            nudInterval.Value = Properties.Settings.Default.userInterval;
-
             // Hide the main screen, we don't need it
             HideForm();
         }
@@ -62,37 +74,34 @@ namespace wpTrackerCS
             // Stop the program from closing
             e.Cancel = true;
 
-            // Hide the form & update settings
+            // Hide the form
             HideForm();
         }
-                
-        public void ShowForm()
+
+        private void nfiMain_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            this.Show();
-            this.ShowInTaskbar = true;
+            // Bring up the Options/About screen
+            ShowForm();
         }
 
-        private void HideForm()
+        private void tsmiOpen_Click(object sender, EventArgs e)
         {
-            // Make the form invisible
-            this.Hide();
-            this.ShowInTaskbar = false;
-
-            // Use & save new settings
-            nfiMain.Visible = true;
-            Properties.Settings.Default.userInterval = nudInterval.Value;
-            // Save user's settings
-            Properties.Settings.Default.Save();
-
-            // Restart the timer
-            tmrCheck.Interval = (Int32)nudInterval.Value * 1000;
-            tmrCheck.Enabled = true;
-
-            // Run the checking code now
-            CheckWallpaper();
+            // Bring up the Options/About screen
+            ShowForm();
         }
 
-        private void CheckWallpaper()
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            // Hide the Options/About screen & use the settings from it
+            HideForm();
+        }
+
+        private void tsmiExit_Click(object sender, EventArgs e)
+        {
+            Shutdown();
+        }
+
+        private void CheckWallpaper(object sender = null, EventArgs e = null)
         {
             // Check the last updated screen value in registry
             RegistryKey parentKey = Registry.CurrentUser
@@ -108,9 +117,10 @@ namespace wpTrackerCS
             nfiMain.Icon = Properties.Resources.ScreenOFF;
             nfiMain.Text = "Last WP Change: ";
 
+            String updateString = "";
             if (updatedScreen >= 0)
             {
-                nfiMain.Text += "Screen " + (updatedScreen + 1);
+                updateString += "Screen " + (updatedScreen + 1);
                 if (updatedScreen < s_screenIcons.Length)
                 {
                     nfiMain.Icon = s_screenIcons[updatedScreen];
@@ -122,30 +132,28 @@ namespace wpTrackerCS
             }
             else
             {
-                nfiMain.Text += "Unknown";
+                updateString += "Unknown";
             }
+            updateString += " @ " + modifiedTime.ToShortTimeString();
 
-            nfiMain.Text +=  " @ " + modifiedTime.ToShortTimeString();
-        }
+            // Set update label on form
+            nfiMain.Text += updateString;
+            lblLastUpdated.Text = updateString;
 
-        }
-
-        private void nfiMain_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            // Bring up the Options/About screen
-            ShowForm();
-        }
-
-        private void tsmiOpen_Click(object sender, EventArgs e)
-        {
-            // Bring up the Options/About screen
-            ShowForm();
-        }
-
-        private void btnHide_Click(object sender, EventArgs e)
-        {
-            // Hide the Options/About screen & use the settings from it
-            HideForm();
+            // Populate the wallpaper paths list box
+            lsbPaths.Items.Clear();
+            int pathCount = (Int32)parentKey.GetValue("TranscodedImageCount");
+            for (int i = 0; i < pathCount; i++)
+            {
+                String key = "TranscodedImageCache_" + i.ToString().PadLeft(3, '0');
+                Byte[] encodedPath = (byte[])parentKey.GetValue(key);
+                // Decode the path string.
+                // Skip the first 24 bytes.
+                string path =
+                    System.Text.Encoding.Unicode.GetString(encodedPath, 24,
+                                                           encodedPath.Length - 24);
+                lsbPaths.Items.Add(path);
+            }
         }
 
         private void tsmiUpdate_Click(object sender, EventArgs e)
@@ -160,19 +168,13 @@ namespace wpTrackerCS
             CheckWallpaper();
         }
 
-        private void tmrCheck_Tick(object sender, EventArgs e)
+        private void lsbPaths_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            // Run the checking code now
-            CheckWallpaper();
-        }
-
-        private void tsmiExit_Click(object sender, EventArgs e)
-        {
-            // Save user's settings
-            Properties.Settings.Default.Save();
-
-            // Quit the program
-            Application.Exit();
+            if (lsbPaths.SelectedItems.Count > 0)
+            {
+                String path = lsbPaths.SelectedItem.ToString();
+                System.Diagnostics.Process.Start(path);
+            }
         }
 
         private void lblNitemice_Click(object sender, EventArgs e)
@@ -180,6 +182,5 @@ namespace wpTrackerCS
             // Open my website in the default browser
             System.Diagnostics.Process.Start("http://nitemice.net");
         }
-
     }
 }
