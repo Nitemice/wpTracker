@@ -28,11 +28,11 @@ namespace wpTrackerCS
             InitializeComponent();
 
             // Initialise monitoring registry for changes to wallpaper screen value
-            g_monitor = new RegistryMonitor(RegistryHive.CurrentUser,
-                                            "Control Panel\\Desktop");
+            g_monitor = new RegistryMonitor(RegistryHive.CurrentUser, "Control Panel\\Desktop");
             g_monitor.RegChanged += new EventHandler(CheckWallpaper);
             g_monitor.Start();
         }
+
 
         private void Shutdown()
         {
@@ -101,12 +101,27 @@ namespace wpTrackerCS
             Shutdown();
         }
 
+        private string decodePath(byte[] encodedPath)
+        {
+            // Decode the path string.
+            // Skip the first 24 bytes.
+            return System.Text.Encoding.Unicode.GetString(encodedPath, 24,
+                                                          encodedPath.Length - 24);
+        }
+
         private void CheckWallpaper(object sender = null, EventArgs e = null)
         {
+            // Ensure we're calling this from the original thread.
+            // We need this so we can update stuff on the form.
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(CheckWallpaper), new object[] { sender, e });
+                return;
+            }
+
             // Check the last updated screen value in registry
-            RegistryKey parentKey = Registry.CurrentUser
-                                            .OpenSubKey("Control Panel")
-                                            .OpenSubKey("Desktop");
+            RegistryKey parentKey = Registry.CurrentUser.OpenSubKey("Control Panel")
+                                                        .OpenSubKey("Desktop");
             int updatedScreen = (Int32)parentKey.GetValue("LastUpdated");
 
             // Find out when the last change occurred
@@ -143,18 +158,24 @@ namespace wpTrackerCS
             // Populate the wallpaper paths list box
             lsbPaths.Items.Clear();
             int pathCount = (Int32)parentKey.GetValue("TranscodedImageCount");
-            for (int i = 0; i < pathCount; i++)
+
+            if (pathCount > 0 &&
+                Array.Exists(parentKey.GetSubKeyNames(),
+                             element => element.StartsWith("TranscodedImageCache_")))
             {
-                String key = "TranscodedImageCache_" + i.ToString().PadLeft(3, '0');
-                Byte[] encodedPath = (byte[])parentKey.GetValue(key);
-                // Decode the path string.
-                // Skip the first 24 bytes.
-                string path =
-                    System.Text.Encoding.Unicode.GetString(encodedPath, 24,
-                                                           encodedPath.Length - 24);
-                lsbPaths.Items.Add(path);
+                for (int i = 0; i < pathCount; i++)
+                {
+                    String key = "TranscodedImageCache_" + i.ToString().PadLeft(3, '0');
+                    lsbPaths.Items.Add(decodePath((byte[])parentKey.GetValue(key)));
+                }
+            }
+            else
+            {
+                lsbPaths.Items.Add(decodePath(
+                    (byte[])parentKey.GetValue("TranscodedImageCache")));
             }
         }
+
 
         private void tsmiUpdate_Click(object sender, EventArgs e)
         {
