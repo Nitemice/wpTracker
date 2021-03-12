@@ -128,7 +128,7 @@ namespace wpTrackerCS
             String filePath = (String)parentKey.GetValue("WallPaper");
             var modifiedTime = File.GetLastWriteTime(filePath);
 
-            // Set the icon and message accordingly
+            // Set tray icon and construct message accordingly
             nfiMain.Icon = Properties.Resources.ScreenOFF;
             nfiMain.Text = "Last WP Change: ";
 
@@ -151,16 +151,20 @@ namespace wpTrackerCS
             }
             updateString += " @ " + modifiedTime.ToShortTimeString();
 
-            // Set update label on form
+            // Set tray icon tooltip
             nfiMain.Text += updateString;
+
+            // Set update label on form
             lblLastUpdated.Text = updateString;
 
             // Populate the wallpaper paths list box
             lsbPaths.Items.Clear();
             int pathCount = (Int32)parentKey.GetValue("TranscodedImageCount");
 
+            // If there's more than one cached image,
+            // go through each and add them all
             if (pathCount > 0 &&
-                Array.Exists(parentKey.GetSubKeyNames(),
+                Array.Exists(parentKey.GetValueNames(),
                              element => element.StartsWith("TranscodedImageCache_")))
             {
                 for (int i = 0; i < pathCount; i++)
@@ -191,8 +195,10 @@ namespace wpTrackerCS
 
         private void lsbPaths_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (lsbPaths.SelectedItems.Count > 0)
+            // If something is selected
+            if (lsbPaths.SelectedItems.Count == 1)
             {
+                // Open the wallpaper file in the default image viewer
                 String path = lsbPaths.SelectedItem.ToString();
                 System.Diagnostics.Process.Start(path);
             }
@@ -201,7 +207,7 @@ namespace wpTrackerCS
         private void lblNitemice_Click(object sender, EventArgs e)
         {
             // Open my website in the default browser
-            System.Diagnostics.Process.Start("http://nitemice.net");
+            System.Diagnostics.Process.Start("https://www.nitemice.net/");
         }
     }
 }
