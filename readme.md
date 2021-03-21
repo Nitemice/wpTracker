@@ -69,6 +69,7 @@ To exit the program, right-click on the icon and choose "Exit".
 
 ## 5. Version History
   
+- 4.1.0 (21/03/2021): Fixed exception thrown from null wallpaper path
 - 4.0.0 (12/03/2021): Replaced timer with registry monitor, added wp filepath list
 - 3.3.0 (14/02/2015): Altered registry path & added some support for 4-16 monitors
 - 3.2.0 (27/10/2014): Updated registry-checking mechanism to be more robust  

@@ -71,7 +71,7 @@ namespace wpTrackerCS
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Stop the program from closing
+            // Stop the program from exiting
             e.Cancel = true;
 
             // Hide the form
@@ -80,19 +80,19 @@ namespace wpTrackerCS
 
         private void nfiMain_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            // Bring up the Options/About screen
+            // Show the main screen
             ShowForm();
         }
 
         private void tsmiOpen_Click(object sender, EventArgs e)
         {
-            // Bring up the Options/About screen
+            // Show the main screen
             ShowForm();
         }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            // Hide the Options/About screen & use the settings from it
+            // Hide the main screen
             HideForm();
         }
 
@@ -103,10 +103,26 @@ namespace wpTrackerCS
 
         private string decodePath(byte[] encodedPath)
         {
-            // Decode the path string.
+            if (encodedPath == null)
+            {
+                return "";
+            }
+
             // Skip the first 24 bytes.
-            return System.Text.Encoding.Unicode.GetString(encodedPath, 24,
-                                                          encodedPath.Length - 24);
+            // It probably means something, but I can't work it out.
+            int startOffset = 24;
+
+            // Find the end of path string, indicated by 0x00 0x00.
+            int endOffset = startOffset + 1;
+            while (endOffset < encodedPath.Length &&
+                   (encodedPath[endOffset] != 0 || encodedPath[endOffset - 1] != 0))
+            {
+                endOffset++;
+            }
+
+            // Decode the path string.
+            return System.Text.Encoding.Unicode.GetString(encodedPath, startOffset,
+                                                          endOffset - startOffset);
         }
 
         private void CheckWallpaper(object sender = null, EventArgs e = null)
@@ -161,11 +177,9 @@ namespace wpTrackerCS
             lsbPaths.Items.Clear();
             int pathCount = (Int32)parentKey.GetValue("TranscodedImageCount");
 
-            // If there's more than one cached image,
+            // If there's more than one cached image, & we're not in stretch mode,
             // go through each and add them all
-            if (pathCount > 0 &&
-                Array.Exists(parentKey.GetValueNames(),
-                             element => element.StartsWith("TranscodedImageCache_")))
+            if (pathCount > 0 && updatedScreen >= 0)
             {
                 for (int i = 0; i < pathCount; i++)
                 {
@@ -179,7 +193,6 @@ namespace wpTrackerCS
                     (byte[])parentKey.GetValue("TranscodedImageCache")));
             }
         }
-
 
         private void tsmiUpdate_Click(object sender, EventArgs e)
         {
